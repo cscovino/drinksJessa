@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
+*{
+    font-family: 'Nunito Sans', sans-serif;
+}
+body{
+    color: #ececec;
+    background-color: #1a2226;
+}
+table{
+	color: #383838;
+}
+tr:nth-child(even){
+	background: #eaeaea;
+}
+th{
+	background: #395062;
+	color: #fff;
+}
+label{
+	font-weight: normal;
+}
+.header-button{
+    font-size: 30px;
+    color: #ececec;
+    text-decoration: none;
+}
+.navbar-custom-menu{
+	margin-right: 8%;
+	height: 50px;
+}
+.options{
+	margin: 2%;
+	font-size: 22px;
+}
+.options-alcol{
+	color: #383838;
+	font-size: 18px;
+	font-weight: normal;
+}
+.icons{
+	margin-left: 10%;
+}
+.radio{
+	margin-left: 3%;
+	font-size: 15px;
+	color: #383838;
+}
+#add-user{
+	padding-top: 8px;
+}
+#menu-options{
+	margin: 5%;
+}
+#menu-options-alcol{
+	margin: 1%;
+}
+#alcol-title{
+	font-size: 25px;
+	float: left;
+	margin-top: 0.8%;
+	margin-left: 15%;
+}
+#before{
+	padding-top: 35%;
+}
+#add-user-modal{
+	margin-left: 90%;
+	font-size: 20px;
+}
+#can{
+	margin-left: 13%;
+}
+#tea{
+	margin-left: 14.5%;
+}
+#glass-1{
+	margin-left: 8.5%;
+}
+#info{
+	margin-left: 7%;
+	margin-top: 3%;
+	font-size: 15px;
+}
+#client-name, #client-drink, #client{
+	background-color: #fff;
+	color: #383838;
+	width: 80%;
+	padding-left: 1%;
+}
+#client-name{
+	margin-bottom: 1%;
+}
+#client-comment{
+    width: 80%;
+}

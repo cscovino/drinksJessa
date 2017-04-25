@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" type="text/css" href="css/_all-skins.min.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Menú de Bebidas</title>
+</head>
+
+<body>
+	<header class="main-header">
+        <a class="logo"><img src="img/soutecblanco.png" height="30px"></a>
+        <nav class="navbar navbar-static-top">
+            <div class="navbar-custom-menu">
+                <a href="" class="header-button" data-toggle="modal" data-target="#myModal" id="user-button"><span class="glyphicon glyphicon-user" id="add-user"></span></a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="" class="header-button" data-toggle="modal" data-target="#myModal2"><span class="glyphicon glyphicon-copy" id="shopping"></span></a>
+            </div>
+        </nav>
+	</header>
+<div class="row">
+<div class="col-md-4">
+  <div id="info">
+    <div class="form-group">
+      <label>Cliente:</label>
+      <div class="input-group" data-toggle="modal" data-target="#myModal7">
+            <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
+            <input type="text" class="form-control" placeholder="Cliente" id="name-client">
+        </div>
+    </div>
+    <div class="form-group">
+    	<label>Nombre:</label>
+    	<div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+            <input type="text" class="form-control" placeholder="Nombre" id="name-client">
+        </div>
+    </div>
+	  <div class="form-group">
+	  	<button type="button" class="btn btn-primary" onclick="app.saveComments();">Guardar</button>
+	  </div>
+  </div>
+</div>
+<div class="col-md-8">
+  <div id="menu-options">
+    <ul class="nav nav-list">
+      <li><label class="tree-toggle nav-header">Avior</label>
+        <ul class="nav nav-list tree">
+          <li><i class="fa fa-circle-o"></i>&nbsp;Fabio Calliman</li>
+          <li><i class="fa fa-circle-o"></i>&nbsp;Ronel Constant</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div> 
+
+<!-- ###################################################################################################### -->
+<!-- #######################################  Modal ####################################################### -->
+<!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Agregar Cliente</h4>
+      </div>
+      <div class="modal-body" id="user-body">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
+            <input type="text" class="form-control" placeholder="Cliente" id="name-client">
+        </div>
+      </div>
+      <div id="add-user-modal">
+          <a onclick="app.delUser();"><span class="glyphicon glyphicon-minus" style="color: #b20000;"></span></a>
+          <a onclick="app.addUser();"><span class="glyphicon glyphicon-plus"></span></a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="app.save();">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+<!-- ###################################################################################################### -->
+<!-- #######################################  Modal 2 ##################################################### -->
+<!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Clientes</h4>
+      </div>
+      <div class="modal-body" id="user-body2">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="app.sendMail();">Ordenar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+<!-- ###################################################################################################### -->
+<!-- #####################################  Modal Cliente ################################################# -->
+<!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal7" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Clientes</h4>
+      </div>
+      <div id="menu-clients"></div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="app.refreshClient();">Ok</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+<!-- ###################################################################################################### -->
+<!-- #####################################  Modal Empresa ################################################# -->
+<!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Empresa</h4>
+      </div>
+      <div id="clients"></div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="app.refreshClient();">Ok</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+</body>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/app.min.js"></script>
+<script type="text/javascript" src="js/demo.js"></script>
+<script type="text/javascript" src="js/firebase.js"></script>
+<script type="text/javascript" src="js/email.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+
+</html>
