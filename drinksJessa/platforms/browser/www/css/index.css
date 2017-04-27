@@ -1,16 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
-@import url('https://fonts.googleapis.com/css?family=Marck+Script');
-@import url('https://fonts.googleapis.com/css?family=Handlee');
-@import url('https://fonts.googleapis.com/css?family=Poiret+One');
-@import url('https://fonts.googleapis.com/css?family=Amatic+SC');
-@import url('https://fonts.googleapis.com/css?family=Englebert');
-
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
 *{
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
 }
 body{
-    color: #ececec;
-    background-color: #1a2226;
+    color: #395062;
+    background-color: #fff;
 }
 table{
 	color: #383838;
@@ -24,6 +18,9 @@ th{
 }
 label{
 	font-weight: normal;
+}
+input[type='text'] {
+	font-size: 15px;
 }
 .header-button{
     font-size: 30px;
@@ -43,6 +40,9 @@ label{
 	font-size: 18px;
 	font-weight: normal;
 }
+.form-control{
+	width: 40%;
+}
 .icons{
 	margin-left: 10%;
 }
@@ -55,7 +55,10 @@ label{
 	padding-top: 8px;
 }
 #menu-options{
-	margin: 5%;
+	margin-left: 7%;
+	margin-top: 3%;
+	font-size: 15px;
+	width: 80%;
 }
 #menu-options-alcol{
 	margin: 1%;
@@ -73,21 +76,12 @@ label{
 	margin-left: 90%;
 	font-size: 20px;
 }
-#can{
-	margin-left: 13%;
-}
-#tea{
-	margin-left: 14.5%;
-}
-#glass-1{
-	margin-left: 8.5%;
-}
-#info{
+#info, #info-meet{
 	margin-left: 7%;
 	margin-top: 3%;
 	font-size: 15px;
 }
-#client-name, #client-drink, #client{
+#client-name, #client{
 	background-color: #fff;
 	color: #383838;
 	width: 80%;
@@ -95,7 +89,4 @@ label{
 }
 #client-name{
 	margin-bottom: 1%;
-}
-#client-comment{
-    width: 80%;
 }

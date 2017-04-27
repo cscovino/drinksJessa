@@ -18,45 +18,51 @@
 
 <body>
 	<header class="main-header">
-        <a class="logo"><img src="img/soutecblanco.png" height="30px"></a>
-        <nav class="navbar navbar-static-top">
-            <div class="navbar-custom-menu">
-                <a href="" class="header-button" data-toggle="modal" data-target="#myModal" id="user-button"><span class="glyphicon glyphicon-user" id="add-user"></span></a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="" class="header-button" data-toggle="modal" data-target="#myModal2"><span class="glyphicon glyphicon-copy" id="shopping"></span></a>
-            </div>
-        </nav>
+    <a class="logo"><img src="img/soutec.png" height="30px"></a>
+    <nav class="navbar navbar-static-top">
+      <div class="navbar-custom-menu">
+        <a href="" class="header-button" data-toggle="modal" data-target="#myModal" id="user-button"><img src="img/people.svg" height="30px"></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="" class="header-button" data-toggle="modal" data-target="#myModal2"><img src="img/bar-chart.svg" height="30px"></a>
+      </div>
+    </nav>
 	</header>
 <div class="row">
-<div class="col-md-4">
+<div class="col-md-6">
   <div id="info">
     <div class="form-group">
       <label>Cliente:</label>
-      <div id="client" data-toggle="modal" data-target='#myModal8' onclick="app.loadClients(0);">Empresa</div>
+      <div class="input-group">
+            <span class="input-group-addon" data-toggle="modal" data-target="#myModal8"><img src="img/office-block.svg" height="20px"></span>
+            <input type="text" class="form-control" placeholder="Cliente" id="name-clients" style="width: 80%;">
+        </div>
     </div>
     <div class="form-group">
     	<label>Nombre:</label>
-    	<div id="client-name" data-toggle="modal" data-target='#myModal7' onclick="app.loadClients(1);">Nombre</div>
-    </div>
-    <div class="form-group">
-    	<label>Bebida:</label>
-    	<div id="client-drink">Bebida</div>
-    </div>
-    <div class="form-group">
-    	<label>Comentarios:</label>
-    	<textarea id="client-comment" class="form-control" rows="2" placeholder="Ingresa tu comentario..."></textarea>
+    	<div class="input-group">
+            <span class="input-group-addon"><img src="img/social2.svg" height="20px"></span>
+            <input type="text" class="form-control" placeholder="Nombre" id="name-client"  style="width: 80%;">
+        </div>
     </div>
 	  <div class="form-group">
-	  	<button type="button" class="btn btn-primary" onclick="app.saveComments();">Guardar</button>
+	  	<button type="button" class="btn btn-primary" onclick="app.saveName();">Guardar</button>
 	  </div>
   </div>
+  <div id="menu-options"></div>
 </div>
-<div class="col-md-8">
-  <div id="menu-options">
-    <div><a data-toggle="modal" data-target='#myModal3'><div class="options" id="alcohol">Bebidas Alcohólicas<img src="img/glass.svg" height="50px" class="icons" id="glass"></div></a></div><br>
-    <div><a data-toggle="modal" data-target='#myModal4'><div class="options" id="soda">Bebidas Gaseosas<img src="img/can.svg" height="50px" class="icons" id="can"></div></a></div><br>
-    <div><a data-toggle="modal" data-target='#myModal5'><div class="options" id="hot">Bebidas Calientes<img src="img/tea-cup.svg" height="50px" class="icons" id="tea"></div></a></div><br>
-    <div><a data-toggle="modal" data-target='#myModal6'><div class="options" id="refresh">Bebidas Refrescantes<img src="img/glass-1.svg" height="50px" class="icons" id="glass-1"></div></a><br></div>
+<div class="col-md-6">
+  <div id="info-meet">
+    <label>Invitados para la reunión:</label>
+    <div class="input-group">
+      <span class="input-group-addon"><img src="img/social.svg" height="20px"></span>
+      <input type="text" class="form-control" placeholder="Invitado" style="width: 80%;" data-toggle="modal" data-target="#myModal7" id="invited">
+      <span class="ocult" style="display: none;"></span>
+    </div>
+    <br>
+    <div class="input-group">
+      <span style="margin-left: 30%;" onclick="app.addClient();"><img src="img/social3.svg" height="30px"></span>
+    </div>
+    <br>
   </div>
 </div> 
 
@@ -68,20 +74,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Agregar Cliente</h4>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Reunión de hoy</h4>
       </div>
-      <div class="modal-body" id="user-body">
-        <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
-            <input type="text" class="form-control" placeholder="Cliente" id="name-client">
-        </div>
-      </div>
-      <div id="add-user-modal">
-          <a onclick="app.delUser();"><span class="glyphicon glyphicon-minus" style="color: #b20000;"></span></a>
-          <a onclick="app.addUser();"><span class="glyphicon glyphicon-plus"></span></a>
-      </div>
+      <div class="modal-body" id="user-body"></div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="app.save();">Cerrar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="app.sendMeet();">Enviar</button>
       </div>
     </div>
   </div>
@@ -97,116 +95,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Clientes</h4>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Dashboard</h4>
       </div>
       <div class="modal-body" id="user-body2">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="app.sendMail();">Ordenar</button>
       </div>
-    </div>
-  </div>
-</div>
-<!-- ###################################################################################################### -->
-<!-- ###################################################################################################### -->
-
-<!-- ###################################################################################################### -->
-<!-- #####################################  Modal Alcohol ################################################# -->
-<!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Bebidas Alcohólicas</h4>
-      </div>
-      <div id="menu-options-alcol">
-        <div class="options-alcol" id="Vino-Espumante" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Vino Espumante</label></div><br>
-        <div class="options-alcol" id="Vino-Tinto" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Vino Tinto</label></div><br>
-        <div class="options-alcol" id="Vino-Blanco" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Vino Blanco</label></div><br>
-        <div class="options-alcol" id="Ron" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Ron (Diplomático)</label></div><br>
-        <div class="options-alcol" id="Whisky" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Whisky (Buchanan's 18 años)</label></div><br>
-      </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div> -->
-    </div>
-  </div>
-</div>
-<!-- ###################################################################################################### -->
-<!-- ###################################################################################################### -->
-
-<!-- ###################################################################################################### -->
-<!-- #####################################  Modal Gaseosa ################################################# -->
-<!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Bebidas Gaseosas</h4>
-      </div>
-      <div id="menu-options-alcol">
-        <div class="options-alcol" id="Coca-Cola" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Coca-Cola</label></div><br>
-        <div class="options-alcol" id="Coca-Cola-Light" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Coca-Cola Light</label></div><br>
-        <div class="options-alcol" id="Chinotto" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Chinotto</label></div><br>
-        <div class="options-alcol" id="Frescolita" onclick="app.selectDrink(this);" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Frescolita</label></div><br>
-      </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div> -->
-    </div>
-  </div>
-</div>
-<!-- ###################################################################################################### -->
-<!-- ###################################################################################################### -->
-
-<!-- ###################################################################################################### -->
-<!-- ####################################  Modal Caliente ################################################# -->
-<!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Bebidas Calientes</h4>
-      </div>
-      <div id="menu-options-alcol">
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Cafe-Negro" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Café Negro</label></div><br>
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Cafe-Marron" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Café Marrón</label></div><br>
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Cafe-Leche" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Café con Leche</label></div><br>
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Te-Verde" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Té Verde</label></div><br>
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Te-Negro" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Té Negro</label></div><br>
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Te-Jamaica" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Té Flor de Jamaica</label></div><br>
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Manzanilla" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Manzanilla</label></div><br>
-      </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div> -->
-    </div>
-  </div>
-</div>
-<!-- ###################################################################################################### -->
-<!-- ###################################################################################################### -->
-
-<!-- ###################################################################################################### -->
-<!-- #####################################  Modal Refresh ################################################# -->
-<!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Bebidas Refrescantes</h4>
-      </div>
-      <div id="menu-options-alcol">
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Agua" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Agua</label></div><br>
-        <div class="options-alcol" onclick="app.selectDrink(this);" id="Jugo-Naranja" data-dismiss="modal"><label><input type="radio">&nbsp;&nbsp;Jugo de Naranja</label></div><br>
-      </div><!-- 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div> -->
     </div>
   </div>
 </div>
@@ -223,7 +118,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel" style="color: #000;">Clientes</h4>
       </div>
-      <div id="menu-clients"></div>
+      <div id="menu-clients" style="padding: 3%;font-size:15px;"></div>
       <!-- <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" onclick="app.refreshClient();">Ok</button>
       </div> -->
@@ -258,6 +153,8 @@
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/app.min.js"></script>
+<script type="text/javascript" src="js/demo.js"></script>
 <script type="text/javascript" src="js/firebase.js"></script>
 <script type="text/javascript" src="js/email.min.js"></script>
 <script type="text/javascript" src="js/index.js"></script>

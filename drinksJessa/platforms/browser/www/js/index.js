@@ -1,10 +1,12 @@
 var app = {
 
 	model: {
-		"clients": {},
+		'clients':{}
 	},
 
-	model2:{},
+	modelMeet: {
+		'hoy':{}
+	},
 
 	firebaseConfig: {
 	    apiKey: "AIzaSyC50skbZWPdmbhMgSz9ulM8pBJ8r8F8lag",
@@ -15,47 +17,46 @@ var app = {
 	    messagingSenderId: "495209622347"
   	},
 
-  	initFirebase: function(){
-  		firebase.initializeApp(app.firebaseConfig);
-        emailjs.init("user_E6w9y3AjySOWMQGes6bIy");
-
-        //firebase.database().ref('clients').set({Avior:{Fabio:{Bebida:"Te"},Ronel:{Bebida:"Coca-Cola"}}});
-        //firebase.database().ref('clients').child("Avior").child("Ronel").remove();
-        firebase.database().ref().on('child_added', function(snap){
-        	app.model2 = snap.val();
-        	for(var key in app.model2){
-        		for(var key2 in app.model2[key]){
-        			console.log(app.model2[key][key2]);
-        		}
-        	}
-        });
+  	setSnap: function(snap){
+  		app.model = snap;
+  		app.refreshData();
+  		app.loadClients();
   	},
 
-    gotData: function(data){
-        console.log(data.val());
-    },
+	addUser: function(data){
+		var dato = data.id
+		var args = dato.split("_");
+		$('#invited').attr('value',args[1]);
+		$('.ocult').attr('id',args[0]);
+	},
 
-    errData: function(err){
-        console.log(err);
-    },
-
-	addUser: function(){
-		var cc = document.getElementById('name-client').value;
-		try {
-			var data = document.getElementById('name-user').value;
-		}
-		catch(err){
-			console.log(err);
-		}
-		if (data && cc) {
-			app.model.clients[cc][data] = {};
-            app.model.clients[cc][data]['Bebida'] = '';
-            app.model.clients[cc][data]['Coment'] = '';
-			app.refreshModal();
-		}
-		else if (cc) {
-			app.model.clients[cc] = {};
-			app.refreshModal();
+	addClient: function(){
+		var aux = 0;
+		var aux2 = 0;
+		var user = document.getElementById('invited').value;
+		var client = document.getElementsByClassName('ocult')[0].id;
+		if(user){
+			for(var key in app.modelMeet.hoy) {
+				if (key === client) {
+					for(var key2 in app.modelMeet.hoy[client]){
+						if (key2 === user) {
+							alert('Ya se agregó esta persona a la reunión');
+							aux = 1;
+							break;
+						}
+					}
+					if (!aux) {
+						app.modelMeet.hoy[client][user] = 'Nombre';
+						aux2 = 1;
+						break;
+					}
+				}
+			}
+			if (!aux2) {
+				app.modelMeet.hoy[client] = {};
+				app.modelMeet.hoy[client][user] = 'Nombre';
+			}
+			app.refreshMeeting();
 		}
 	},
 
@@ -64,192 +65,155 @@ var app = {
 		app.refreshModal();
 	},
 
-	refreshModal: function(){
-		var users = $('#user-body');
-		var cc = document.getElementById('name-client').value;
+	refreshMeeting: function(){;
+		var users = $('#info-meet');
 		users.html('');
 		var codigo = '';
-		codigo += '<div class="input-group">';
-			codigo += '<span class="input-group-addon"><i class="fa fa-briefcase"></i></span>';
-			codigo += '<input type="text" class="form-control" value="'+cc+'" id="name-client" disabled="">'
-		codigo += '</div>';
-		codigo += '<br>';
-		for (var key in app.model.clients[cc]) {
+		codigo += '<label>Invitados para la reunión:</label>';
+		for(var key in app.modelMeet.hoy){
+				for(var key2 in app.modelMeet.hoy[key]){
 			codigo += '<div class="input-group">';
-				codigo += '<span class="input-group-addon"><i class="fa fa-user"></i></span>';
-				codigo += '<input type="text" class="form-control" value="'+key+'" disabled="">';
-			codigo += '</div>';
-			codigo += '<br>';
+				codigo += '<span class="input-group-addon"><img src="img/social.svg" height="20px"></span>';
+				codigo += '<input type="text" class="form-control" value="'+key2+'" style="width: 80%;" id="" disabled="">';
+				codigo += '<span id="ocult" style="display: none;" class='+key+'></span>';
+			codigo += '</div><br>';
+				}
 		}
 		codigo += '<div class="input-group">';
-			codigo += '<span class="input-group-addon"><i class="fa fa-user"></i></span>';
-			codigo += '<input type="text" class="form-control" placeholder="Nombre" id="name-user">'
-		codigo += '</div>';
+			codigo += '<span class="input-group-addon"><img src="img/social.svg" height="20px"></span>';
+			codigo += '<input type="text" class="form-control" placeholder="Invitado" style="width: 80%;" data-toggle="modal" data-target="#myModal7" id="invited">';
+			codigo += '<span class="ocult" style="display: none;"></span>';
+		codigo += '</div><br>';
+		codigo += '<div class="input-group">';
+			codigo += '<span style="margin-left: 30%;" onclick="app.addClient();"><img src="img/social3.svg" height="30px"></span>';
+		codigo += '</div><br>';
 		users.append(codigo);
+		console.log(JSON.stringify(app.modelMeet.hoy));
+		app.refreshMeetingModal();		
 	},
 
-	save: function(){
-		var users = $('#user-body2');
+	refreshMeetingModal: function(){
+		var users = $('#user-body');
 		users.html('');
 		var codigo = '<table class="table table-bordered"';
 				codigo += '<tbody>';
 					codigo += '<tr>';
 						codigo += '<th>Empresa</th>';
 						codigo += '<th>Nombre</th>';
-						codigo += '<th>Bebida</th>';
-                        codigo += '<th>Comentario</th>';
 					codigo += '</tr>';
-				for (var key in app.model.clients) {
-						for(var key2 in app.model.clients[key]){
-							codigo += '<tr>';
-								codigo += '<td>'+key+'</td>'
-								codigo += '<td>'+key2+'</td>';
-								codigo += '<td>'+app.model.clients[key][key2]['Bebida']+'</td>';
-		                        codigo += '<td>'+app.model.clients[key][key2]['Coment']+'</td>';
-							codigo += '</tr>';
-                    	}
+				for (var key in app.modelMeet.hoy) {
+					for(var key2 in app.modelMeet.hoy[key]){
+						codigo += '<tr>';
+							codigo += '<td>'+key+'</td>'
+							codigo += '<td>'+key2+'</td>';
+						codigo += '</tr>';
+                	}
 				}
 				codigo += '</tbody>';
 			codigo += '</table>';
 		users.append(codigo);
 	},
 
-    saveComments: function(){
-		var cc = document.getElementById('client').innerHTML;
-        var comment = document.getElementById('client-comment').value;
-        var client = document.getElementById('client-name').innerHTML;
-        for(var key in app.model.clients[cc]){
-            if (key === client) {
-                app.model.clients[cc][key]['Coment'] = comment;
-                break;
-            }
-        }
-        app.save();
-        document.getElementById('client-comment').value = '';
-        document.getElementById('client-name').innerHTML = 'Nombre';
-        document.getElementById('client-drink').innerHTML = "Bebida";
-        document.getElementById('client').innerHTML = "Empresa";
-    },
-
-	saveFirebase: function(){
-		firebase.database().ref('clients').push(app.model.clients);
+	refreshData: function(){
+		var users = $('#menu-options');
+		var clients = $('#menu-clients');
+		users.html('');
+		clients.html('');
+		var codigo = '';
+		codigo += '<ul class="nav nav-list">';
+		for(var key in app.model.clients){
+			codigo += '<li>';
+				codigo += '<label class="tree-toggle nav-header">'+key+'</label>';
+				codigo += '<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>';
+				codigo += '<ul class="nav nav-list tree">';
+				for(var key2 in app.model.clients[key]){
+					codigo += '<li id="'+key+'_'+key2+'" data-dismiss="modal" onclick="app.addUser(this);">&nbsp;&nbsp;&nbsp;<i class="fa fa-circle-o"></i>&nbsp;'+key2+'</li>';
+				}
+				codigo += '</ul>';
+			codigo += '</li>';
+		}
+		codigo += '</ul>';
+		users.append(codigo);
+		clients.append(codigo);
+		$('.tree-toggle').click(function () {
+			$(this).parent().children('ul.tree').toggle(200);
+		});
+		$('.tree-toggle').parent().children('ul.tree').toggle(200);
 	},
 
-	selectDrink: function(dat){
-		var client = document.getElementById('client-name').innerHTML;
-		var cc = document.getElementById('client').innerHTML;
-		for (var key in app.model.clients[cc]) {
-			if (key === client){
-				app.model.clients[cc][key]['Bebida'] = dat.id;
+    saveName: function(){
+    	var client = document.getElementById('name-clients').value;
+        var name = document.getElementById('name-client').value;
+        var aux = 0;
+        for(var key in app.model.clients){
+            if (key === client) {
+                for(var key2 in app.model.clients[client]){
+                	if (key2 === name){
+                		alert('Esta persona ya está registrada');
+                		aux = 1;
+                	}
+                }
+            }
+        }
+        if (!aux) {
+        	app.saveFirebase(client,name);
+        }
+        document.getElementById('name-clients').value = '';
+        document.getElementById('name-client').value = '';
+    },
+
+	saveFirebase: function(client,name){
+		var aux = 0;
+		for(var key in app.model.clients){
+			if (key === client) {
+				firebase.database().ref('clients').child(key).child(name).update({Bebida:'',Coment:''});
+				aux = 1;
 				break;
-			} 
+			}
 		}
-		app.refreshDrink(client);
-        app.save();
+		if (!aux) {
+			firebase.database().ref('clients').child(client).child(name).update({Bebida:'',Coment:''});
+		}
+	},
+
+	sendMeet: function(){
+		try{
+			firebase.database().ref('hoy').remove();
+		}
+		catch(err){}
+		firebase.database().ref().update(app.modelMeet);
+	},
+
+	refreshClient: function(dat){
+        if (!dat.id) {
+            document.getElementById('name-clients').placeholder = "No ha seleccionado el cliente";
+        }
+        else{
+            document.getElementById('name-clients').value = dat.id;
+        }
 	},
 
 	loadClients: function(opt){
-		if (opt) {
-			var cc = document.getElementById('client').innerHTML;
-			var users = $('#menu-clients');
-			users.html('');
-			for (var key in app.model.clients[cc]) {
-				var codigo = '';
-				codigo += '<div class="radio" onclick="app.refreshClient(this,1);" id="'+key+'" data-dismiss="modal">';
-					codigo += '<label>';
-						codigo += '<input type="radio" value="'+key+'">&nbsp;&nbsp;';
-						codigo += key;
-					codigo += '</label>';
-				codigo += '</div>';
-				codigo += '<br>';
-				users.append(codigo);
-			}
-		}
-		else{
-			var users = $('#clients');
-			users.html('');
-			for (var key in app.model.clients) {
-				var codigo = '';
-				codigo += '<div class="radio" onclick="app.refreshClient(this,0);" id="'+key+'" data-dismiss="modal">';
-					codigo += '<label>';
-						codigo += '<input type="radio" value="'+key+'">&nbsp;&nbsp;';
-						codigo += key;
-					codigo += '</label>';
-				codigo += '</div>';
-				codigo += '<br>';
-				users.append(codigo);
-			}
-		}	
-	},
-
-	refreshClient: function(dat,opt){
-        if (!dat.id) {
-            document.getElementById('client-name').innerHTML = "No ha seleccionado nombre";
-            document.getElementById('client-drink').innerHTML = "No ha seleccionado bebida";
-        }
-        else if(opt){
-            document.getElementById('client-name').innerHTML = dat.id;
-            app.refreshDrink(dat.id);
-        }
-        else if(!opt){
-            document.getElementById('client').innerHTML = dat.id;
-        }
-	},
-
-	refreshDrink: function(client){
-		var aux = 0;
-		var cc = document.getElementById('client').innerHTML;
-		for (var key in app.model.clients[cc]) {
-			if (key === client){
-				if (app.model.clients[cc][key]['Bebida']) {
-					document.getElementById('client-drink').innerHTML = app.model.clients[cc][key]['Bebida'];
-					aux = 1;
-				}
-				break;
-			} 
-		}
-		if (!aux) {
-            if (client === 'Nombre') {
-                alert("No ha seleccionado nombre");
-                document.getElementById('client-name').innerHTML = "No ha seleccionado nombre";
-            }
-            else{
-                alert("No ha seleccionado bebida");
-                document.getElementById('client-drink').innerHTML = "No ha seleccionado bebida";
-            }
+		var users = $('#clients');
+		users.html('');
+		for (var key in app.model.clients) {
+			var codigo = '';
+			codigo += '<div class="radio" onclick="app.refreshClient(this);" id="'+key+'" data-dismiss="modal">';
+				codigo += '<label>';
+					codigo += '<input type="radio" value="'+key+'">&nbsp;&nbsp;';
+					codigo += key;
+				codigo += '</label>';
+			codigo += '</div>';
+			codigo += '<br>';
+			users.append(codigo);
 		}
 	},
-
-    sendMail: function(){
-        var codigo = '<table class="table table-bordered"';
-				codigo += '<tbody>';
-					codigo += '<tr>';
-						codigo += '<th>Empresa</th>';
-						codigo += '<th>Nombre</th>';
-						codigo += '<th>Bebida</th>';
-                        codigo += '<th>Comentario</th>';
-					codigo += '</tr>';
-				for (var key in app.model.clients) {
-						for(var key2 in app.model.clients[key]){
-							codigo += '<tr>';
-								codigo += '<td>'+key+'</td>'
-								codigo += '<td>'+key2+'</td>';
-								codigo += '<td>'+app.model.clients[key][key2]['Bebida']+'</td>';
-		                        codigo += '<td>'+app.model.clients[key][key2]['Coment']+'</td>';
-							codigo += '</tr>';
-                    	}
-				}
-				codigo += '</tbody>';
-			codigo += '</table>';
-        emailjs.send("gmail","template_173DO73o",{message_html: codigo});
-        //app.saveFirebase();
-    },
 
 }
 
-if ('addEventListener' in document) {
-    document.addEventListener('DOMContentLoaded', function(){
-        app.initFirebase();
-    }, false);
-}
-
+firebase.initializeApp(app.firebaseConfig);
+firebase.database().ref().on('value', function(snap){
+	if (snap.val() !== null) {
+		app.setSnap(snap.val());
+	}
+});
