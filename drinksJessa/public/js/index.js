@@ -19,7 +19,11 @@ var app = {
 
   	setSnap: function(snap){
   		app.model = snap;
+  		app.modelMeet.hoy = app.model.hoy; 
+  		console.log(app.modelMeet);
   		app.refreshData();
+  		app.refreshMeeting();
+  		app.refreshMeetingModal();
   		app.loadClients();
   	},
 
@@ -60,6 +64,24 @@ var app = {
 		}
 	},
 
+	delMeet: function(){
+		var users = $('#info-meet');
+		users.html('');
+		var codigo = '';
+		codigo += '<label>Invitados para la reunión:</label>';
+		codigo += '<div class="input-group">';
+			codigo += '<span class="input-group-addon"><img src="img/social.svg" height="20px"></span>';
+			codigo += '<input type="text" class="form-control" placeholder="Invitado" style="width: 80%;" data-toggle="modal" data-target="#myModal7" id="invited">';
+			codigo += '<span class="ocult" style="display: none;"></span>';
+		codigo += '</div><br>';
+		codigo += '<div class="input-group">';
+			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">';
+		codigo += '</div><br>';
+		users.append(codigo);
+		app.modelMeet.hoy = {};
+		app.refreshMeetingModal();
+	},
+
 	viewUser: function(data){
 		var users = $('#mydata');
 		var client = data.id.split('_')[0];
@@ -75,8 +97,9 @@ var app = {
 					if (client === key) {
 						for(var key2 in app.model.clients[key]){
 							if (user === key2) {
-								document.getElementById('myModalLabel4').innerHTML = user;
+								document.getElementById('myModalLabel4').innerHTML = 'Histórico de '+user;
 								for(var i=0; i<app.model.clients[key][key2]['Bebida'].length; i++){
+									console.log(app.model.clients[key][key2]['Bebida']);
 									codigo += '<tr>';
 										codigo += '<td>'+app.model.clients[key][key2]['Bebida'][i]+'</td>'
 										codigo += '<td>'+app.model.clients[key][key2]['Coment'][i]+'</td>';
@@ -97,7 +120,6 @@ var app = {
 		var key = datos.split('_')[0];
 		var key2 = datos.split('_')[1];
 		delete app.modelMeet.hoy[key][key2];
-		console.log(app.modelMeet.hoy);
 		app.refreshMeeting();
 		app.refreshMeetingModal();
 	},
@@ -122,7 +144,8 @@ var app = {
 			codigo += '<span class="ocult" style="display: none;"></span>';
 		codigo += '</div><br>';
 		codigo += '<div class="input-group">';
-			codigo += '<span style="margin-left: 30%;" onclick="app.addClient();"><img src="img/social3.svg" height="30px"></span>';
+			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">';
+			codigo += '<img src="img/social4.svg" height="30px" onclick="app.delMeet();">';
 		codigo += '</div><br>';
 		users.append(codigo);
 		app.refreshMeetingModal();		
@@ -216,17 +239,18 @@ var app = {
 		var aux = 0;
 		for(var key in app.model.clients){
 			if (key === client) {
-				firebase.database().ref('clients').child(key).child(name).update({Bebida:[],Coment:[]});
+				firebase.database().ref('clients').child(key).child(name).update({Bebida:[''],Coment:['']});
 				aux = 1;
 				break;
 			}
 		}
 		if (!aux) {
-			firebase.database().ref('clients').child(client).child(name).update({Bebida:[],Coment:[]});
+			firebase.database().ref('clients').child(client).child(name).update({Bebida:[''],Coment:['']});
 		}
 	},
 
 	sendMeet: function(){
+		debugger;
 		try{
 			firebase.database().ref('hoy').remove();
 		}
