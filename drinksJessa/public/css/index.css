@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
+*{
+    font-family: 'Nunito Sans', sans-serif;
+}
+body{
+    color: #395062;
+    background-color: #fff;
+}
+table{
+	color: #383838;
+}
+tr:nth-child(even){
+	background: #eaeaea;
+}
+th{
+	background: #395062;
+	color: #fff;
+}
+label{
+	font-weight: normal;
+}
+input[type='text'] {
+	font-size: 15px;
+}
+.confirm{
+	margin-top: 3%;
+	margin-bottom: 3%;
+	text-align: center;
+	font-size: 15px;
+}
+.header-button{
+    font-size: 30px;
+    color: #ececec;
+    text-decoration: none;
+}
+.navbar-custom-menu{
+	margin-right: 8%;
+	height: 50px;
+}
+.options{
+	margin: 2%;
+	font-size: 22px;
+}
+.options-alcol{
+	color: #383838;
+	font-size: 18px;
+	font-weight: normal;
+}
+.form-control{
+	width: 40%;
+}
+.icons{
+	margin-left: 10%;
+}
+.radio{
+	margin-left: 3%;
+	font-size: 15px;
+	color: #383838;
+}
+#add-user{
+	padding-top: 8px;
+}
+#menu-options{
+	margin-left: 7%;
+	margin-top: 3%;
+	font-size: 15px;
+	width: 80%;
+}
+#menu-options-alcol{
+	margin: 1%;
+}
+#alcol-title{
+	font-size: 25px;
+	float: left;
+	margin-top: 0.8%;
+	margin-left: 15%;
+}
+#before{
+	padding-top: 35%;
+}
+#add-user-modal{
+	margin-left: 90%;
+	font-size: 20px;
+}
+#info, #info-meet{
+	margin-left: 7%;
+	margin-top: 3%;
+	font-size: 15px;
+}
+#client-name, #client{
+	background-color: #fff;
+	color: #383838;
+	width: 80%;
+	padding-left: 1%;
+}
+#client-name{
+	margin-bottom: 1%;
+}
