@@ -6,13 +6,13 @@ body{
     color: #395062;
     background-color: #fff;
 }
-table{
+table#guests, table#guests2, table#guests3{
 	color: #383838;
 }
-tr:nth-child(even){
+table#guests tr:nth-child(even), table#guests2 tr:nth-child(even), table#guests3 tr:nth-child(even){
 	background: #eaeaea;
 }
-th{
+table#guests th, table#guests2 th, table#guests3 th{
 	background: #395062;
 	color: #fff;
 }

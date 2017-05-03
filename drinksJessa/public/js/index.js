@@ -1,11 +1,16 @@
 var app = {
 
 	model: {
-		'clients':{}
 	},
 
 	modelMeet: {
-		'hoy':{}
+		'titulo': '',
+		'fecha': '',
+		'users':[]
+	},
+
+	modelMeetings: {
+		'meetings':{}
 	},
 
 	firebaseConfig: {
@@ -19,12 +24,10 @@ var app = {
 
   	setSnap: function(snap){
   		app.model = snap;
-  		app.modelMeet.hoy = app.model.hoy; 
-  		console.log(app.modelMeet);
+  		app.modelMeetings.meetings = snap.meetings;
   		app.refreshData();
-  		app.refreshMeeting();
-  		app.refreshMeetingModal();
   		app.loadClients();
+  		app.refreshMeets();
   	},
 
 	addUser: function(data){
@@ -36,31 +39,21 @@ var app = {
 
 	addClient: function(){
 		var aux = 0;
-		var aux2 = 0;
 		var user = document.getElementById('invited').value;
 		var client = document.getElementsByClassName('ocult')[0].id;
 		if(user){
-			for(var key in app.modelMeet.hoy) {
-				if (key === client) {
-					for(var key2 in app.modelMeet.hoy[client]){
-						if (key2 === user) {
-							alert('Ya se agregó esta persona a la reunión');
-							aux = 1;
-							break;
-						}
-					}
-					if (!aux) {
-						app.modelMeet.hoy[client][user] = 'Nombre';
-						aux2 = 1;
-						break;
-					}
+			for(var i=0; i<app.modelMeet['users'].length; i++) {
+				if(app.modelMeet['users'][i]['Nombre'] === user && app.modelMeet['users'][i]['Cliente'] === client){
+					alert('Ya se agregó esta persona a la reunión');
+					aux = 1;
+					break;
 				}
 			}
-			if (!aux2) {
-				app.modelMeet.hoy[client] = {};
-				app.modelMeet.hoy[client][user] = 'Nombre';
+			if (!aux) {
+				app.modelMeet['users'].push({'Nombre':user,'Cliente':client});
 			}
 			app.refreshMeeting();
+			app.refreshMeetingModal();
 		}
 	},
 
@@ -78,7 +71,7 @@ var app = {
 			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">';
 		codigo += '</div><br>';
 		users.append(codigo);
-		app.modelMeet.hoy = {};
+		app.modelMeet['users'] = [];
 		app.refreshMeetingModal();
 	},
 
@@ -87,7 +80,7 @@ var app = {
 		var client = data.id.split('_')[0];
 		var user = data.id.split('_')[1]; 
 		users.html('');
-		var codigo = '<table class="table table-bordered">';
+		var codigo = '<table class="table table-bordered" id="guests2">';
 				codigo += '<tbody>';
 					codigo += '<tr>';
 						codigo += '<th>Bebidas</th>';
@@ -119,9 +112,22 @@ var app = {
 		var datos = document.getElementsByClassName('confirm')[0].id;
 		var key = datos.split('_')[0];
 		var key2 = datos.split('_')[1];
-		delete app.modelMeet.hoy[key][key2];
+		var index = -1;
+		for(var i=0; i<app.modelMeet['users'].length; i++){
+			if (app.modelMeet['users'][i]['Nombre'] === key2 && app.modelMeet['users'][i]['Cliente'] === key) {
+				index = i;
+				break;
+			}
+		}
+		app.modelMeet['users'].splice(index,1);
 		app.refreshMeeting();
 		app.refreshMeetingModal();
+	},
+
+	delMeeting: function(){
+		var datos = document.getElementsByClassName('confirmmeet')[0].id;
+		firebase.database().ref('meetings').child(datos).remove();
+		app.refreshMeets();
 	},
 
 	refreshMeeting: function(){;
@@ -129,14 +135,12 @@ var app = {
 		users.html('');
 		var codigo = '';
 		codigo += '<label>Invitados para la reunión:</label>';
-		for(var key in app.modelMeet.hoy){
-				for(var key2 in app.modelMeet.hoy[key]){
+		for(var i=0; i<app.modelMeet['users'].length; i++){
 			codigo += '<div class="input-group">';
 				codigo += '<span class="input-group-addon"><img src="img/social.svg" height="20px"></span>';
-				codigo += '<input type="text" class="form-control" value="'+key2+'" style="width: 80%;" id="" disabled="">';
-				codigo += '<span id="ocult" style="display: none;" class='+key+'></span>';
+				codigo += '<input type="text" class="form-control" value="'+app.modelMeet['users'][i]['Nombre']+'" style="width: 80%;" id="" disabled="">';
+				codigo += '<span id="ocult" style="display: none;" class='+app.modelMeet['users'][i]['Cliente']+'></span>';
 			codigo += '</div><br>';
-				}
 		}
 		codigo += '<div class="input-group">';
 			codigo += '<span class="input-group-addon"><img src="img/social.svg" height="20px"></span>';
@@ -144,33 +148,58 @@ var app = {
 			codigo += '<span class="ocult" style="display: none;"></span>';
 		codigo += '</div><br>';
 		codigo += '<div class="input-group">';
-			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">';
-			codigo += '<img src="img/social4.svg" height="30px" onclick="app.delMeet();">';
+			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">&nbsp;&nbsp;&nbsp;';
+			codigo += '<img src="img/social4.svg" height="30px" onclick="app.delMeet();">&nbsp;&nbsp;&nbsp;';
+			codigo += '<img src="img/arrows2.svg" height="25px" data-toggle="modal" data-target="#myModal">';
 		codigo += '</div><br>';
-		users.append(codigo);
-		app.refreshMeetingModal();		
+		users.append(codigo);	
 	},
 
 	idConfirm: function(data){
 		document.getElementsByClassName('confirm')[0].id = data.id;
 	},
 
+	confirmmeet: function(datakey){
+		document.getElementsByClassName('confirmmeet')[0].id = datakey;
+	},
+
 	refreshMeetingModal: function(){
 		var users = $('#user-body');
 		users.html('');
-		var codigo = '<table class="table table-bordered">';
+		var codigo = '<table class="table table-bordered" id="guests">';
 				codigo += '<tbody>';
 					codigo += '<tr>';
 						codigo += '<th>Empresa</th>';
 						codigo += '<th>Nombre</th>';
 					codigo += '</tr>';
-				for (var key in app.modelMeet.hoy) {
-					for(var key2 in app.modelMeet.hoy[key]){
-						codigo += '<tr onclick="app.idConfirm('+key+'_'+key2+');" data-toggle="modal" data-target="#myModal3">';
-							codigo += '<td>'+key+'</td>'
-							codigo += '<td>'+key2+'</td>';
-						codigo += '</tr>';
-                	}
+				for (var i=0; i<app.modelMeet['users'].length; i++) {
+					codigo += '<tr onclick="app.idConfirm('+app.modelMeet['users'][i]['Cliente']+'_'+app.modelMeet['users'][i]['Nombre']+');" data-toggle="modal" data-target="#myModal3">';
+						codigo += '<td>'+app.modelMeet['users'][i]['Cliente']+'</td>';
+						codigo += '<td>'+app.modelMeet['users'][i]['Nombre']+'</td>';
+					codigo += '</tr>';
+				}
+				codigo += '</tbody>';
+			codigo += '</table>';
+		users.append(codigo);
+		if (!app.modelMeet['users'][0]) {
+			app.delMeet();
+		}
+	},
+
+	refreshMeets: function(){
+		var users = $('#mymeets');
+		users.html('');
+		var codigo = '<table class="table table-bordered" id="guests3">';
+				codigo += '<tbody>';
+					codigo += '<tr>';
+						codigo += '<th>Título</th>';
+						codigo += '<th>Fecha</th>';
+					codigo += '</tr>';
+				for (var key in app.modelMeetings.meetings) {
+					codigo += '<tr onclick="app.confirmmeet('+"'"+key+"'"+');" data-toggle="modal" data-target="#myModal6">';
+						codigo += '<td>'+app.modelMeetings.meetings[key]['titulo']+'</td>';
+						codigo += '<td>'+app.modelMeetings.meetings[key]['fecha']+'</td>';
+					codigo += '</tr>';
 				}
 				codigo += '</tbody>';
 			codigo += '</table>';
@@ -217,6 +246,7 @@ var app = {
     saveName: function(){
     	var client = document.getElementById('name-clients').value;
         var name = document.getElementById('name-client').value;
+        var email = document.getElementById('email-client').value;
         var aux = 0;
         for(var key in app.model.clients){
             if (key === client) {
@@ -229,33 +259,31 @@ var app = {
             }
         }
         if (!aux) {
-        	app.saveFirebase(client,name);
+        	app.saveFirebase(client,name,email);
         }
         document.getElementById('name-clients').value = '';
         document.getElementById('name-client').value = '';
+        document.getElementById('email-client').value = '';
     },
 
-	saveFirebase: function(client,name){
+	saveFirebase: function(client,name,email){
 		var aux = 0;
 		for(var key in app.model.clients){
 			if (key === client) {
-				firebase.database().ref('clients').child(key).child(name).update({Bebida:[''],Coment:['']});
+				firebase.database().ref('clients').child(key).child(name).update({Bebida:[''],Coment:[''],Email:email});
 				aux = 1;
 				break;
 			}
 		}
 		if (!aux) {
-			firebase.database().ref('clients').child(client).child(name).update({Bebida:[''],Coment:['']});
+			firebase.database().ref('clients').child(client).child(name).update({Bebida:[''],Coment:[''],Email:email});
 		}
 	},
 
 	sendMeet: function(){
-		debugger;
-		try{
-			firebase.database().ref('hoy').remove();
-		}
-		catch(err){}
-		firebase.database().ref().update(app.modelMeet);
+		app.modelMeet['titulo'] = document.getElementById('title-meet').value;
+		app.modelMeet['fecha'] = $('#datepicker').datepicker('getDate').toDateString();
+		firebase.database().ref('meetings').push(app.modelMeet);
 	},
 
 	refreshClient: function(dat){
@@ -291,3 +319,8 @@ firebase.database().ref().on('value', function(snap){
 		app.setSnap(snap.val());
 	}
 });
+
+$('#datepicker').datepicker({
+              autoclose: true,
+              todayHighlight: true
+            });
