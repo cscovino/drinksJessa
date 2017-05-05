@@ -58,7 +58,7 @@ var app = {
 	},
 
 	delMeet: function(){
-		var users = $('#info-meet');
+		var users = $('#info-meet-data');
 		users.html('');
 		var codigo = '';
 		codigo += '<label>Invitados para la reunión:</label>';
@@ -69,7 +69,7 @@ var app = {
 		codigo += '</div><br>';
 		codigo += '<div class="input-group">';
 			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">';
-		codigo += '</div><br>';
+		codigo += '</div>';
 		users.append(codigo);
 		app.modelMeet['users'] = [];
 		app.refreshMeetingModal();
@@ -131,7 +131,7 @@ var app = {
 	},
 
 	refreshMeeting: function(){;
-		var users = $('#info-meet');
+		var users = $('#info-meet-data');
 		users.html('');
 		var codigo = '';
 		codigo += '<label>Invitados para la reunión:</label>';
@@ -166,7 +166,8 @@ var app = {
 	refreshMeetingModal: function(){
 		var users = $('#user-body');
 		users.html('');
-		var codigo = '<table class="table table-bordered" id="guests">';
+		var codigo = '<div id="" class="confirmmeet">¿Deseas programar esta reunión?</div><br>';
+			codigo += '<table class="table table-bordered" id="guests">';
 				codigo += '<tbody>';
 					codigo += '<tr>';
 						codigo += '<th>Empresa</th>';
@@ -282,7 +283,7 @@ var app = {
 
 	sendMeet: function(){
 		app.modelMeet['titulo'] = document.getElementById('title-meet').value;
-		app.modelMeet['fecha'] = $('#datepicker').datepicker('getDate').toDateString();
+		app.modelMeet['fecha'] = document.getElementById('reservationtime').value;
 		firebase.database().ref('meetings').push(app.modelMeet);
 	},
 
@@ -313,14 +314,12 @@ var app = {
 
 }
 
+//Date range picker with time picker
+$('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, locale: {format: 'MM/DD/YYYY h:mm A'}});
+
 firebase.initializeApp(app.firebaseConfig);
 firebase.database().ref().on('value', function(snap){
 	if (snap.val() !== null) {
 		app.setSnap(snap.val());
 	}
 });
-
-$('#datepicker').datepicker({
-              autoclose: true,
-              todayHighlight: true
-            });
