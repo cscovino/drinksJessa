@@ -87,6 +87,9 @@ input[type='text'] {
 	margin-top: 3%;
 	font-size: 15px;
 }
+#info{
+	margin-top: 1%;
+}
 #client-name, #client{
 	background-color: #fff;
 	color: #383838;
@@ -95,4 +98,8 @@ input[type='text'] {
 }
 #client-name{
 	margin-bottom: 1%;
+}
+#calendar{
+	margin-left: 10%;
+	width:80%;
 }

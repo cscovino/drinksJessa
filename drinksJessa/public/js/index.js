@@ -28,6 +28,28 @@ var app = {
   		app.refreshData();
   		app.loadClients();
   		app.refreshMeets();
+
+  		var date = new Date();
+		var d = date.getDate(),
+		    m = date.getMonth(),
+		    y = date.getFullYear();
+		$('#calendar').fullCalendar({
+		  header: {
+		    left: 'prev,next today',
+		    center: 'title',
+		    right: 'month,agendaWeek,agendaDay'
+		  },
+		  buttonText: {
+		    today: 'today',
+		    month: 'month',
+		    week: 'week',
+		    day: 'day'
+		  },
+		  editable: false,
+		  draggable: false,
+		});
+
+		app.refreshCalendar();
   	},
 
 	addUser: function(data){
@@ -67,9 +89,8 @@ var app = {
 			codigo += '<input type="text" class="form-control" placeholder="Invitado" style="width: 80%;" data-toggle="modal" data-target="#myModal7" id="invited">';
 			codigo += '<span class="ocult" style="display: none;"></span>';
 		codigo += '</div><br>';
-		codigo += '<div class="input-group">';
-			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">';
-		codigo += '</div>';
+		document.getElementById('guardar-button').disabled = true;
+		document.getElementById('borrar-button').disabled = true;
 		users.append(codigo);
 		app.modelMeet['users'] = [];
 		app.refreshMeetingModal();
@@ -142,15 +163,14 @@ var app = {
 				codigo += '<span id="ocult" style="display: none;" class='+app.modelMeet['users'][i]['Cliente']+'></span>';
 			codigo += '</div><br>';
 		}
+		if (app.modelMeet['users'].length > 0) {
+			document.getElementById('guardar-button').disabled = false;
+			document.getElementById('borrar-button').disabled = false;
+		}
 		codigo += '<div class="input-group">';
 			codigo += '<span class="input-group-addon"><img src="img/social.svg" height="20px"></span>';
 			codigo += '<input type="text" class="form-control" placeholder="Invitado" style="width: 80%;" data-toggle="modal" data-target="#myModal7" id="invited">';
 			codigo += '<span class="ocult" style="display: none;"></span>';
-		codigo += '</div><br>';
-		codigo += '<div class="input-group">';
-			codigo += '<img src="img/social3.svg" height="30px" onclick="app.addClient();">&nbsp;&nbsp;&nbsp;';
-			codigo += '<img src="img/social4.svg" height="30px" onclick="app.delMeet();">&nbsp;&nbsp;&nbsp;';
-			codigo += '<img src="img/arrows2.svg" height="25px" data-toggle="modal" data-target="#myModal">';
 		codigo += '</div><br>';
 		users.append(codigo);	
 	},
@@ -299,16 +319,56 @@ var app = {
 	loadClients: function(opt){
 		var users = $('#clients');
 		users.html('');
+		var codigo = '';
 		for (var key in app.model.clients) {
-			var codigo = '';
 			codigo += '<div class="radio" onclick="app.refreshClient(this);" id="'+key+'" data-dismiss="modal">';
 				codigo += '<label>';
 					codigo += '<input type="radio" value="'+key+'">&nbsp;&nbsp;';
 					codigo += key;
 				codigo += '</label>';
 			codigo += '</div>';
-			codigo += '<br>';
-			users.append(codigo);
+		}
+		codigo += '<br>';
+		users.append(codigo);
+	},
+
+	refreshCalendar: function(){
+		for(var key in app.model.meetings){
+			var dateVar = app.model.meetings[key]['fecha'].split(' ');
+			var yearVar = dateVar[0].split("/")[2];
+			var monthVar = dateVar[0].split("/")[0];
+			var dayVar = dateVar[0].split("/")[1];
+			var yearVarE = dateVar[4].split("/")[2];
+			var monthVarE = dateVar[4].split("/")[0];
+			var dayVarE = dateVar[4].split("/")[1];
+			var hVar = dateVar[1].split(':')[0];
+			if (dateVar[2] === 'PM') {
+				hVar = +hVar + 12;
+				if (hVar === 24) {
+					hVar = 00;
+				}
+			}
+			var mVar = dateVar[1].split(':')[1];
+			var hVarE = dateVar[5].split(':')[0];
+			if (dateVar[6] === 'PM') {
+				hVarE = +hVarE + 12;
+				if (hVarE === 24) {
+					hVarE = 00;
+				}
+			}
+			var mVarE = dateVar[5].split(':')[1];
+			var ttE = app.model.meetings[key]['titulo'];
+			var eventsE = {
+				title: ttE,
+				start: new Date(yearVar,monthVar-1,dayVar,hVar,mVar),
+				end: new Date(yearVarE,monthVarE-1,dayVarE,hVarE,mVarE),
+				allDay: false,
+				backgroundColor: "#0073b7",
+				borderColor :"#0073b7"
+			};
+
+			$('#calendar').fullCalendar('renderEvent', eventsE);
+			eventsE = '';
 		}
 	},
 
