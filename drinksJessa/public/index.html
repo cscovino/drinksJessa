@@ -14,7 +14,8 @@
     <link rel="stylesheet" type="text/css" href="css/fullcalendar.print.css" media="print">
     <link rel="stylesheet" type="text/css" href="css/AdminLTE.min.css">
     <link rel="stylesheet" type="text/css" href="css/_all-skins.min.css">
-    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="css/timepicker.min.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link href="img/favicon.ico" rel="shortcut icon"/>
     <title>Menú de Bebidas</title>
@@ -35,7 +36,7 @@
 <div class="col-md-6">
   <div id="calendar"></div>
 </div>
-<div class="col-md-6">
+<div class="col-md-6" style="margin-bottom:15%;">
   <div id="info-meeting">
     <div class="form-group" style="width: 80%;">
       <label>Título de la reunión</label>
@@ -43,12 +44,36 @@
     </div>
     <div class="form-group" style="width: 80%;">
       <label>Fecha:</label>
-      <div class="input-group">
-        <div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
-        <input type="text" class="form-control pull-right" id="reservationtime">
+      <div class="input-group date">
+        <div class="input-group-addon">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <input type="text" class="form-control pull-right" id="datepicker">
       </div>
     </div>
-    <div id="info-meet-data">
+    <div class="bootstrap-timepicker" style="width: 30%;float:left;margin-right:2%;">
+      <div class="form-group">
+        <label>Inicio:</label>
+        <div class="input-group date">
+          <div class="input-group-addon">
+            <i class="fa fa-clock-o"></i>
+          </div>
+          <input type="text" class="form-control" id="timepicker">
+        </div>
+      </div>
+    </div>
+    <div class="bootstrap-timepicker" style="display:table-cell;width: 30%;">
+      <div class="form-group">
+        <label>Fin:</label>
+        <div class="input-group date">
+          <div class="input-group-addon">
+            <i class="fa fa-clock-o"></i>
+          </div>
+          <input type="text" class="form-control" id="timepicker2" style="width: 40%;">
+        </div>
+      </div>
+    </div>
+    <div id="info-meet-data" style="clear:both;">
       <label>Invitados para la reunión:</label>
       <div class="input-group" style="width: 80%;">
         <span class="input-group-addon"><img src="img/social.svg" height="20px"></span>
@@ -61,7 +86,7 @@
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal12">Persona nueva</button>
       <button id="borrar-button" type="button" class="btn btn-default" onclick="app.delMeet();" disabled="">Borrar</button>
       <button type="button" class="btn btn-primary" onclick="app.addClient();">Agregar</button>
-      <button id="guardar-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal10" disabled="">Guardar</button>
+      <button id="guardar-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" disabled="">Guardar</button>
     </div>
   </div>
 </div>
@@ -306,8 +331,9 @@
 
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/moment.min.js"></script>
-<script type="text/javascript" src="js/daterangepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script type="text/javascript" src="js/datepicker.js"></script>
+<script type="text/javascript" src="js/bootstrap-timepicker.js"></script>
 <script type="text/javascript" src="js/fullcalendar.min.js"></script>
 <script type="text/javascript" src="js/firebase.js"></script>
 <script type="text/javascript" src="js/email.min.js"></script>

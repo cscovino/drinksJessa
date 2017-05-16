@@ -13,6 +13,10 @@ var app = {
 		'meetings':{}
 	},
 
+	weekday: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+
+	monthyear: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+
 	firebaseConfig: {
 	    apiKey: "AIzaSyC50skbZWPdmbhMgSz9ulM8pBJ8r8F8lag",
 	    authDomain: "drinksmenu-ab56b.firebaseapp.com",
@@ -47,9 +51,26 @@ var app = {
 		  },
 		  editable: false,
 		  draggable: false,
+		  eventClick: function(calEvent,jsEvent,view){
+				app.editMeet(calEvent);
+				console.log(calEvent.start['_i'].toDateString());
+			},
 		});
 
 		app.refreshCalendar();
+  	},
+
+  	editMeet: function(calEvent){
+  		document.getElementById('title-meet').value = calEvent.title;
+  		var fecha = calEvent.start['_i'].toDateString().split(' ');
+  		var m = app.monthyear.indexOf(fecha[1])+1;
+  		if (m < 10) {
+  			m = '0'+m;
+  		}
+  		var upd = fecha[2]+'-'+m+'-'+fecha[3];
+  		console.log(upd);
+  		$('#datepicker').datepicker('update', upd);
+
   	},
 
 	addUser: function(data){
@@ -209,17 +230,30 @@ var app = {
 
 	refreshMeets: function(){
 		var users = $('#mymeets');
+		var today = new Date();
 		users.html('');
+		var codigo = '';
 		var codigo = '<table class="table table-bordered" id="guests3">';
 				codigo += '<tbody>';
 					codigo += '<tr>';
-						codigo += '<th>Título</th>';
 						codigo += '<th>Fecha</th>';
+						codigo += '<th>Hora</th>';
+						codigo += '<th>Título</th>';
 					codigo += '</tr>';
-				for (var key in app.modelMeetings.meetings) {
-					codigo += '<tr onclick="app.confirmmeet('+"'"+key+"'"+');" data-toggle="modal" data-target="#myModal6">';
-						codigo += '<td>'+app.modelMeetings.meetings[key]['titulo']+'</td>';
-						codigo += '<td>'+app.modelMeetings.meetings[key]['fecha']+'</td>';
+				for (var key in app.model.meetings) {
+					codigo += '<tr onclick="app.userPage('+"'"+key+"'"+');" data-dismiss="modal">';
+						var dd = app.model.meetings[key]['fecha'].split(' ');
+						var datee = dd[0].split('/');
+						var dait = new Date(datee[2],datee[0]-1,datee[1]);
+						var today = new Date();
+						if (dait.toDateString() === today.toDateString()) {
+							codigo += '<td>Hoy</td>';
+						}
+						else{
+							codigo += '<td>'+app.weekday[dait.getDay()]+' '+dait.getDate()+' '+app.monthyear[dait.getMonth()]+'</td>';
+						}
+						codigo += '<td>'+dd[1]+' '+dd[2]+' - '+dd[4]+' '+dd[5]+'</td>';
+						codigo += '<td>'+app.model.meetings[key]['titulo']+'</td>';
 					codigo += '</tr>';
 				}
 				codigo += '</tbody>';
@@ -303,7 +337,9 @@ var app = {
 
 	sendMeet: function(){
 		app.modelMeet['titulo'] = document.getElementById('title-meet').value;
-		app.modelMeet['fecha'] = document.getElementById('reservationtime').value;
+		app.modelMeet['fecha'] = document.getElementById('datepicker').value;
+		app.modelMeet['fecha'] += ' '+document.getElementById('timepicker').value+' - ';
+		app.modelMeet['fecha'] += document.getElementById('timepicker2').value;
 		firebase.database().ref('meetings').push(app.modelMeet);
 	},
 
@@ -364,18 +400,28 @@ var app = {
 				end: new Date(yearVarE,monthVarE-1,dayVarE,hVarE,mVarE),
 				allDay: false,
 				backgroundColor: "#0073b7",
-				borderColor :"#0073b7"
+				borderColor :"#0073b7",
 			};
 
-			$('#calendar').fullCalendar('renderEvent', eventsE);
+			$('#calendar').fullCalendar('renderEvent', eventsE, 'stick');
 			eventsE = '';
 		}
+		$('#calendar').fullCalendar({
+
+		});
 	},
 
 }
 
-//Date range picker with time picker
-$('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, locale: {format: 'MM/DD/YYYY h:mm A'}});
+$('#datepicker').datepicker({
+  autoclose: true
+});
+$("#timepicker").timepicker({
+  showInputs: false
+});
+$("#timepicker2").timepicker({
+  showInputs: false
+});
 
 firebase.initializeApp(app.firebaseConfig);
 firebase.database().ref().on('value', function(snap){
