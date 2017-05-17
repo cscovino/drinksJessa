@@ -196,6 +196,7 @@ var app = {
 	},
 
 	delUser: function(){
+		debugger;
 		var datos = document.getElementsByClassName('confirm')[0].id;
 		var key = datos.split('_')[0];
 		var key2 = datos.split('_')[1];
@@ -242,6 +243,7 @@ var app = {
 	},
 
 	idConfirm: function(data){
+		debugger;
 		document.getElementsByClassName('confirm')[0].id = data.id;
 	},
 
@@ -260,7 +262,7 @@ var app = {
 						codigo += '<th>Nombre</th>';
 					codigo += '</tr>';
 				for (var i=0; i<app.modelMeet['users'].length; i++) {
-					codigo += '<tr onclick="app.idConfirm('+app.modelMeet['users'][i]['Cliente']+'_'+app.modelMeet['users'][i]['Nombre']+');" data-toggle="modal" data-target="#myModal3">';
+					codigo += '<tr onclick="app.idConfirm('+app.modelMeet['users'][i]['Cliente'].replace(' ','')+'_'+app.modelMeet['users'][i]['Nombre'].replace(' ','')+');" data-toggle="modal" data-target="#myModal3">';
 						codigo += '<td>'+app.modelMeet['users'][i]['Cliente']+'</td>';
 						codigo += '<td>'+app.modelMeet['users'][i]['Nombre']+'</td>';
 					codigo += '</tr>';
