@@ -9,10 +9,6 @@ var app = {
 		'users':[]
 	},
 
-	modelMeetings: {
-		'meetings':{}
-	},
-
 	weekday: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
 
 	monthyear: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
@@ -28,7 +24,6 @@ var app = {
 
   	setSnap: function(snap){
   		app.model = snap;
-  		app.modelMeetings.meetings = snap.meetings;
   		app.refreshData();
   		app.loadClients();
   		app.refreshMeets();
@@ -53,7 +48,6 @@ var app = {
 		  draggable: false,
 		  eventClick: function(calEvent,jsEvent,view){
 				app.editMeet(calEvent);
-				console.log(calEvent.start['_i'].toDateString());
 			},
 		});
 
@@ -61,16 +55,66 @@ var app = {
   	},
 
   	editMeet: function(calEvent){
+  		app.modelMeet = {};
   		document.getElementById('title-meet').value = calEvent.title;
   		var fecha = calEvent.start['_i'].toDateString().split(' ');
+  		var test = calEvent.start['_i'].toString().split(' ')[4].split(':');
+  		var amopm = 'AM';
+  		var amopm2 = 'AM';
+  		var hora,hora3,hora4;
+  		var tim = +test[0]+1;
+  		if (test[0] > 12) {
+  			var aux = test[0]-12;
+  			hora4 = aux+':'+test[1];
+  			if (aux < 10) {
+  				aux = '0'+aux;
+  			}
+  			hora = aux+':'+test[1];
+  			amopm = 'PM';
+  		}
+  		else{
+  			hora = test[0]+':'+test[1];
+  			hora4 = hora;
+  		}
+  		if (tim > 12) {
+  			var aux = tim-12;
+  			if (aux < 10) {
+  				aux = '0'+aux;
+  			}
+  			hora3 = aux+':'+test[1];
+  			amopm2 = 'PM';
+  		}
+  		else{
+  			hora3 = tim+':'+test[1];
+  		}
   		var m = app.monthyear.indexOf(fecha[1])+1;
+  		var d = fecha[2];
   		if (m < 10) {
   			m = '0'+m;
   		}
-  		var upd = fecha[2]+'-'+m+'-'+fecha[3];
-  		console.log(upd);
+  		if (d < 10) {
+  			d = '0'+d;
+  		}
+  		var upd = m+'-'+d+'-'+fecha[3];
   		$('#datepicker').datepicker('update', upd);
-
+  		$('#timepicker').timepicker('setTime', hora+' '+amopm);
+  		$('#timepicker2').timepicker('setTime', hora3+' '+amopm2);
+  		upd = upd.replace(/-/g,'/');
+  		for(var key in app.model.meetings){
+  			if (app.model.meetings[key]['titulo']===calEvent.title) {
+  				if (app.model.meetings[key]['fecha'].split(' ')[0] === upd) {
+  					var h1 = app.model.meetings[key]['fecha'].split(' ');
+  					var hora1 = h1[1]+' '+h1[2];
+  					var hora2 = hora4+' '+amopm;
+  					if (hora1 === hora2) {
+  						app.modelMeet = app.model.meetings[key];
+  						app.refreshMeeting();
+  						app.refreshMeetingModal();
+  						break;
+  					}
+  				}
+  			}
+  		}
   	},
 
 	addUser: function(data){
@@ -101,6 +145,7 @@ var app = {
 	},
 
 	delMeet: function(){
+		document.getElementById('title-meet').value = '';
 		var users = $('#info-meet-data');
 		users.html('');
 		var codigo = '';
@@ -200,7 +245,7 @@ var app = {
 		document.getElementsByClassName('confirm')[0].id = data.id;
 	},
 
-	confirmmeet: function(datakey){
+	confirmeet: function(datakey){
 		document.getElementsByClassName('confirmmeet')[0].id = datakey;
 	},
 
@@ -241,7 +286,7 @@ var app = {
 						codigo += '<th>Título</th>';
 					codigo += '</tr>';
 				for (var key in app.model.meetings) {
-					codigo += '<tr onclick="app.userPage('+"'"+key+"'"+');" data-dismiss="modal">';
+					codigo += '<tr onclick="app.confirmeet('+"'"+key+"'"+');" data-target="#myModal6" data-toggle="modal">';
 						var dd = app.model.meetings[key]['fecha'].split(' ');
 						var datee = dd[0].split('/');
 						var dait = new Date(datee[2],datee[0]-1,datee[1]);
@@ -340,6 +385,20 @@ var app = {
 		app.modelMeet['fecha'] = document.getElementById('datepicker').value;
 		app.modelMeet['fecha'] += ' '+document.getElementById('timepicker').value+' - ';
 		app.modelMeet['fecha'] += document.getElementById('timepicker2').value;
+		for(var key in app.model.meetings){
+  			if (app.model.meetings[key]['titulo']===app.modelMeet['titulo']) {
+  				if (app.model.meetings[key]['fecha'].split(' ')[0]===document.getElementById('datepicker').value) {
+  					var h1 = app.model.meetings[key]['fecha'].split(' ');
+  					var h2 = app.modelMeet['fecha'].split(' ');
+  					var hora1 = h1[1]+' '+h1[2];
+  					var hora2 = h2[1]+' '+h2[2];
+  					if (hora1 === hora2) {
+  						firebase.database().ref('meetings').child(key).remove();
+  						break;
+  					}
+  				}
+  			}
+  		}
 		firebase.database().ref('meetings').push(app.modelMeet);
 	},
 
@@ -369,6 +428,7 @@ var app = {
 	},
 
 	refreshCalendar: function(){
+		$('#calendar').fullCalendar('removeEvents');
 		for(var key in app.model.meetings){
 			var dateVar = app.model.meetings[key]['fecha'].split(' ');
 			var yearVar = dateVar[0].split("/")[2];
