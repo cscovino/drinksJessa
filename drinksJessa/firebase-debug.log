@@ -85,3 +85,97 @@
      manifest: [] } } 
  Tue May 16 2017 23:29:45 GMT-0400 (Hora estándar de Venezuela)
 [debug] <<< HTTP RESPONSE 200
+[debug] ----------------------------------------------------------------------
+[debug] Command:      C:\Program Files\nodejs\node.exe C:\Users\cscovino\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --debug
+[debug] CLI Version:  3.7.0
+[debug] Platform:     win32
+[debug] Node Version: v6.9.4
+[debug] Time:         Wed May 17 2017 10:39:18 GMT-0400 (Venezuela Standard Time)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[debug] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/C55Fyvq43aJRVmTtlmqY9fDSfaVkSSJuCxnD3CDiZ2Da6t4B4abOPj6y1S58j7-N',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed May 17 2017 10:39:18 GMT-0400 (Venezuela Standard Time)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/drinksmenu-ab56b  
+ Wed May 17 2017 10:39:22 GMT-0400 (Venezuela Standard Time)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/drinksmenu-ab56b/tokens  
+ Wed May 17 2017 10:39:24 GMT-0400 (Venezuela Standard Time)
+[debug] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'drinksmenu-ab56b'...
+[info] 
+[info] i  deploying database, functions, hosting
+[info] +  database: rules ready to deploy.
+[debug] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "firebase-admin": "~4.1.2",
+    "firebase-functions": "^0.5"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[info] i  runtimeconfig: ensuring necessary APIs are enabled...
+[debug] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/drinksmenu-ab56b?view=CONSUMER_VIEW  
+ Wed May 17 2017 10:39:29 GMT-0400 (Venezuela Standard Time)
+[debug] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/drinksmenu-ab56b?view=CONSUMER_VIEW  
+ Wed May 17 2017 10:39:29 GMT-0400 (Venezuela Standard Time)
+[debug] <<< HTTP RESPONSE 200
+[info] +  functions: all necessary APIs are enabled
+[debug] Error: connect ETIMEDOUT 216.58.222.74:443
+    at Object.exports._errnoException (util.js:1022:11)
+    at exports._exceptionWithHostPort (util.js:1045:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1087:14)
+[error] 
+[error] Error: Server Error. connect ETIMEDOUT 216.58.222.74:443
+[debug] ----------------------------------------------------------------------
+[debug] Command:      C:\Program Files\nodejs\node.exe C:\Users\cscovino\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --debug
+[debug] CLI Version:  3.7.0
+[debug] Platform:     win32
+[debug] Node Version: v6.9.4
+[debug] Time:         Wed May 17 2017 10:40:43 GMT-0400 (Venezuela Standard Time)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[debug] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/drinksmenu-ab56b  
+ Wed May 17 2017 10:40:43 GMT-0400 (Venezuela Standard Time)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/drinksmenu-ab56b/tokens  
+ Wed May 17 2017 10:40:44 GMT-0400 (Venezuela Standard Time)
+[debug] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'drinksmenu-ab56b'...
+[info] 
+[info] i  deploying database, functions, hosting
+[info] +  database: rules ready to deploy.
+[debug] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "firebase-admin": "~4.1.2",
+    "firebase-functions": "^0.5"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[info] i  runtimeconfig: ensuring necessary APIs are enabled...
+[debug] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/drinksmenu-ab56b?view=CONSUMER_VIEW  
+ Wed May 17 2017 10:40:47 GMT-0400 (Venezuela Standard Time)
+[debug] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/drinksmenu-ab56b?view=CONSUMER_VIEW  
+ Wed May 17 2017 10:40:47 GMT-0400 (Venezuela Standard Time)
+[debug] <<< HTTP RESPONSE 200
+[info] +  runtimeconfig: all necessary APIs are enabled
+[debug] Error: connect ETIMEDOUT 216.58.222.74:443
+    at Object.exports._errnoException (util.js:1022:11)
+    at exports._exceptionWithHostPort (util.js:1045:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1087:14)
+[error] 
+[error] Error: Server Error. connect ETIMEDOUT 216.58.222.74:443

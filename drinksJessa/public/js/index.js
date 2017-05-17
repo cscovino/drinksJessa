@@ -4,8 +4,8 @@ var app = {
 	},
 
 	modelMeet: {
-		'titulo': '',
-		'fecha': '',
+		'titulo':'',
+		'fecha':'',
 		'users':[]
 	},
 
@@ -47,22 +47,25 @@ var app = {
 		  editable: false,
 		  draggable: false,
 		  eventClick: function(calEvent,jsEvent,view){
-				app.editMeet(calEvent);
+				var defaultDuration = moment.duration($('#calendar').fullCalendar('option', 'defaultTimedEventDuration'));
+				var end = calEvent.end || calEvent.start.clone().add(defaultDuration);
+				app.editMeet(calEvent,end);
 			},
 		});
 
 		app.refreshCalendar();
   	},
 
-  	editMeet: function(calEvent){
-  		app.modelMeet = {};
+  	editMeet: function(calEvent,end){
   		document.getElementById('title-meet').value = calEvent.title;
-  		var fecha = calEvent.start['_i'].toDateString().split(' ');
-  		var test = calEvent.start['_i'].toString().split(' ')[4].split(':');
+  		var fecha = end['_i'].toDateString().split(' ');
+  		var test = end['_i'].toString().split(' ')[4].split(':');
+  		var fechafin = end['_d'].toDateString().split(' ');
+  		var testfin = end['_d'].toString().split(' ')[4].split(':');
   		var amopm = 'AM';
   		var amopm2 = 'AM';
   		var hora,hora3,hora4;
-  		var tim = +test[0]+1;
+  		var tim = testfin[0];
   		if (test[0] > 12) {
   			var aux = test[0]-12;
   			hora4 = aux+':'+test[1];
@@ -81,11 +84,11 @@ var app = {
   			if (aux < 10) {
   				aux = '0'+aux;
   			}
-  			hora3 = aux+':'+test[1];
+  			hora3 = aux+':'+testfin[1];
   			amopm2 = 'PM';
   		}
   		else{
-  			hora3 = tim+':'+test[1];
+  			hora3 = tim+':'+testfin[1];
   		}
   		var m = app.monthyear.indexOf(fecha[1])+1;
   		var d = fecha[2];
@@ -105,9 +108,9 @@ var app = {
   				if (app.model.meetings[key]['fecha'].split(' ')[0] === upd) {
   					var h1 = app.model.meetings[key]['fecha'].split(' ');
   					var hora1 = h1[1]+' '+h1[2];
-  					var hora2 = hora4+' '+amopm;
+  					var hora2 = hora+' '+amopm;
   					if (hora1 === hora2) {
-  						app.modelMeet = app.model.meetings[key];
+  						app.modelMeet = jQuery.extend(true,{},app.model.meetings[key]);
   						app.refreshMeeting();
   						app.refreshMeetingModal();
   						break;
@@ -120,8 +123,8 @@ var app = {
 	addUser: function(data){
 		var dato = data.id
 		var args = dato.split("_");
-		$('#invited').attr('value',args[1]);
-		$('.ocult').attr('id',args[0]);
+		$('#invited').attr('value',args[1].split(/(?=[A-Z])/).join(" "));
+		$('.ocult').attr('id',args[0].split(/(?=[A-Z])/).join(" "));
 	},
 
 	addClient: function(){
@@ -158,7 +161,7 @@ var app = {
 		document.getElementById('guardar-button').disabled = true;
 		document.getElementById('borrar-button').disabled = true;
 		users.append(codigo);
-		app.modelMeet['users'] = [];
+		app.modelMeet = {'titulo':'','fecha':'','users':[]};
 		app.refreshMeetingModal();
 	},
 
@@ -196,10 +199,9 @@ var app = {
 	},
 
 	delUser: function(){
-		debugger;
 		var datos = document.getElementsByClassName('confirm')[0].id;
-		var key = datos.split('_')[0];
-		var key2 = datos.split('_')[1];
+		var key = datos.split('_')[0].split(/(?=[A-Z])/).join(" ");
+		var key2 = datos.split('_')[1].split(/(?=[A-Z])/).join(" ");
 		var index = -1;
 		for(var i=0; i<app.modelMeet['users'].length; i++){
 			if (app.modelMeet['users'][i]['Nombre'] === key2 && app.modelMeet['users'][i]['Cliente'] === key) {
@@ -207,7 +209,10 @@ var app = {
 				break;
 			}
 		}
+		console.log(app.modelMeet);
 		app.modelMeet['users'].splice(index,1);
+		console.log(app.modelMeet);
+		console.log(app.model.meetings);
 		app.refreshMeeting();
 		app.refreshMeetingModal();
 	},
@@ -243,8 +248,8 @@ var app = {
 	},
 
 	idConfirm: function(data){
-		debugger;
 		document.getElementsByClassName('confirm')[0].id = data.id;
+		
 	},
 
 	confirmeet: function(datakey){
@@ -262,7 +267,7 @@ var app = {
 						codigo += '<th>Nombre</th>';
 					codigo += '</tr>';
 				for (var i=0; i<app.modelMeet['users'].length; i++) {
-					codigo += '<tr onclick="app.idConfirm('+app.modelMeet['users'][i]['Cliente'].replace(' ','')+'_'+app.modelMeet['users'][i]['Nombre'].replace(' ','')+');" data-toggle="modal" data-target="#myModal3">';
+					codigo += '<tr onclick="app.idConfirm('+app.modelMeet['users'][i]['Cliente'].replace(/ /g,'')+'_'+app.modelMeet['users'][i]['Nombre'].replace(/ /g,'')+');" data-toggle="modal" data-target="#myModal3">';
 						codigo += '<td>'+app.modelMeet['users'][i]['Cliente']+'</td>';
 						codigo += '<td>'+app.modelMeet['users'][i]['Nombre']+'</td>';
 					codigo += '</tr>';
@@ -327,8 +332,8 @@ var app = {
 				codigo += '<ul class="nav nav-list tree">';
 				codigo2 += '<ul class="nav nav-list tree">';
 				for(var key2 in app.model.clients[key]){
-					codigo += '<li id="'+key+'_'+key2+'" data-dismiss="modal" onclick="app.addUser(this);">&nbsp;&nbsp;&nbsp;<i class="fa fa-circle-o"></i>&nbsp;'+key2+'</li>';
-					codigo2 += '<li id="'+key+'_'+key2+'" data-toggle="modal" data-target="#myModal4" onclick="app.viewUser(this);">&nbsp;&nbsp;&nbsp;<i class="fa fa-circle-o"></i>&nbsp;'+key2+'</li>';
+					codigo += '<li id="'+key.replace(/ /g,'')+'_'+key2.replace(/ /g,'')+'" data-dismiss="modal" onclick="app.addUser(this);">&nbsp;&nbsp;&nbsp;<i class="fa fa-circle-o"></i>&nbsp;'+key2+'</li>';
+					codigo2 += '<li id="'+key.replace(/ /g,'')+'_'+key2.replace(/ /g,'')+'" data-toggle="modal" data-target="#myModal4" onclick="app.viewUser(this);">&nbsp;&nbsp;&nbsp;<i class="fa fa-circle-o"></i>&nbsp;'+key2+'</li>';
 				}
 				codigo += '</ul>';
 				codigo2 += '</ul>';
@@ -383,15 +388,17 @@ var app = {
 	},
 
 	sendMeet: function(){
+  		var h2 = app.modelMeet['fecha'].split(' ');
+  		var tit = app.modelMeet['titulo'];
+  		var fec = app.modelMeet['fecha'].split(' ')[0];
 		app.modelMeet['titulo'] = document.getElementById('title-meet').value;
 		app.modelMeet['fecha'] = document.getElementById('datepicker').value;
 		app.modelMeet['fecha'] += ' '+document.getElementById('timepicker').value+' - ';
 		app.modelMeet['fecha'] += document.getElementById('timepicker2').value;
 		for(var key in app.model.meetings){
-  			if (app.model.meetings[key]['titulo']===app.modelMeet['titulo']) {
-  				if (app.model.meetings[key]['fecha'].split(' ')[0]===document.getElementById('datepicker').value) {
+  			if (app.model.meetings[key]['titulo']===tit) {
+  				if (app.model.meetings[key]['fecha'].split(' ')[0]===fec) {
   					var h1 = app.model.meetings[key]['fecha'].split(' ');
-  					var h2 = app.modelMeet['fecha'].split(' ');
   					var hora1 = h1[1]+' '+h1[2];
   					var hora2 = h2[1]+' '+h2[2];
   					if (hora1 === hora2) {
