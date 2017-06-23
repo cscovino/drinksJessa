@@ -5,6 +5,7 @@ var app = {
 
 	modelMeet: {
 		'titulo':'',
+		'sala':'',
 		'fecha':'',
 		'users':[]
 	},
@@ -58,6 +59,12 @@ var app = {
 
   	editMeet: function(calEvent,end){
   		document.getElementById('title-meet').value = calEvent.title;
+  		debugger;
+  		for(var key in app.model.meetings){
+  			if(app.model.meetings[key]['titulo'] === calEvent.title){
+  				document.getElementById('room-meet').value = app.model.meetings[key]['sala'];
+  			}
+  		}
   		var fecha = end['_i'].toDateString().split(' ');
   		var test = end['_i'].toString().split(' ')[4].split(':');
   		var fechafin = end['_d'].toDateString().split(' ');
@@ -161,7 +168,7 @@ var app = {
 		document.getElementById('guardar-button').disabled = true;
 		document.getElementById('borrar-button').disabled = true;
 		users.append(codigo);
-		app.modelMeet = {'titulo':'','fecha':'','users':[]};
+		app.modelMeet = {'titulo':'','sala':'','fecha':'','users':[]};
 		app.refreshMeetingModal();
 	},
 
@@ -392,6 +399,7 @@ var app = {
   		var tit = app.modelMeet['titulo'];
   		var fec = app.modelMeet['fecha'].split(' ')[0];
 		app.modelMeet['titulo'] = document.getElementById('title-meet').value;
+		app.modelMeet['sala'] = document.getElementById('room-meet').value;
 		app.modelMeet['fecha'] = document.getElementById('datepicker').value;
 		app.modelMeet['fecha'] += ' '+document.getElementById('timepicker').value+' - ';
 		app.modelMeet['fecha'] += document.getElementById('timepicker2').value;
