@@ -26,6 +26,8 @@
     <a class="logo"><img src="img/soutec.png" height="30px"></a>
     <nav class="navbar navbar-static-top">
       <div class="navbar-custom-menu">
+        <a href="" class="header-button" data-toggle="modal" data-target="#myModal9" id="user-button"><img src="img/list.svg" height="25px"></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="" class="header-button" data-toggle="modal" data-target="#myModal5" id="user-button"><img src="img/people.svg" height="45px"></a>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="" class="header-button" data-toggle="modal" data-target="#myModal10"><img src="img/calendar.png" height="30px"></a>
@@ -142,6 +144,91 @@
 <!-- ###################################################################################################### -->
 <!-- #####################################  Modal Cliente ################################################# -->
 <!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Confirmar borrado</h4>
+      </div>
+      <div id="" class="confirm">¿Estás seguro que deseas eliminar esta persona?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="app.delUser();">Sí</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+<!-- ###################################################################################################### -->
+<!-- #####################################  Modal Cliente ################################################# -->
+<!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel4" style="color: #000;"></h4>
+      </div>
+      <div id="mydata" class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+<!-- ###################################################################################################### -->
+<!-- #####################################  Modal Cliente ################################################# -->
+<!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" style="color: #000;">Histórico de clientes</h4>
+      </div>
+      <div id="menu-options"></div>
+      <!-- <div id="mymeets" class="modal-body"></div> -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+<!-- ###################################################################################################### -->
+<!-- #####################################  Modal Cliente ################################################# -->
+<!-- ###################################################################################################### -->
+<div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Confirmar borrado</h4>
+      </div>
+      <div class="modal-body">
+        <div id="" class="confirmmeet">¿Estás seguro que deseas eliminar esta reunión?</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="app.delMeeting();">Sí</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ###################################################################################################### -->
+<!-- ###################################################################################################### -->
+
+<!-- ###################################################################################################### -->
+<!-- #####################################  Modal Cliente ################################################# -->
+<!-- ###################################################################################################### -->
 <div class="modal fade" id="myModal7" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -176,24 +263,22 @@
 <!-- ###################################################################################################### -->
 <!-- #####################################  Modal Cliente ################################################# -->
 <!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="myModal9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Confirmar borrado</h4>
+        <h4 class="modal-title" style="color: #000;">Pedidos de hoy</h4>
       </div>
-      <div id="" class="confirm">¿Estás seguro que deseas eliminar esta persona?</div>
+      <div id="orders" class="modal-body"></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="app.delUser();">Sí</button>
       </div>
     </div>
   </div>
 </div>
 <!-- ###################################################################################################### -->
 <!-- ###################################################################################################### -->
-
 
 <!-- ###################################################################################################### -->
 <!-- #####################################  Modal Cliente ################################################# -->
@@ -208,70 +293,6 @@
       <div id="mymeets" class="modal-body"></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- ###################################################################################################### -->
-<!-- ###################################################################################################### -->
-
-<!-- ###################################################################################################### -->
-<!-- #####################################  Modal Cliente ################################################# -->
-<!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" style="color: #000;">Histórico de clientes</h4>
-      </div>
-      <div id="menu-options"></div>
-      <!-- <div id="mymeets" class="modal-body"></div> -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- ###################################################################################################### -->
-<!-- ###################################################################################################### -->
-
-<!-- ###################################################################################################### -->
-<!-- #####################################  Modal Cliente ################################################# -->
-<!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel4" style="color: #000;"></h4>
-      </div>
-      <div id="mydata" class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- ###################################################################################################### -->
-<!-- ###################################################################################################### -->
-
-<!-- ###################################################################################################### -->
-<!-- #####################################  Modal Cliente ################################################# -->
-<!-- ###################################################################################################### -->
-<div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="color: #000;">Confirmar borrado</h4>
-      </div>
-      <div class="modal-body">
-        <div id="" class="confirmmeet">¿Estás seguro que deseas eliminar esta reunión?</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="app.delMeeting();">Sí</button>
       </div>
     </div>
   </div>
@@ -323,6 +344,7 @@
 </div>
 <!-- ###################################################################################################### -->
 <!-- ###################################################################################################### -->
+
 
 <footer>
   <img src="img/cuadritospq.png" height="100px" style="position:fixed;bottom:0;">

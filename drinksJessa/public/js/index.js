@@ -28,6 +28,7 @@ var app = {
   		app.refreshData();
   		app.loadClients();
   		app.refreshMeets();
+  		app.refreshOrders();
 
   		var date = new Date();
 		var d = date.getDate(),
@@ -488,6 +489,60 @@ var app = {
 		});
 	},
 
+    refreshOrders: function(){
+        if (app.model['order']['orders'].length > 0) {
+            var users = $('#orders');
+            users.html('');
+            var codigo = '<table class="table table-bordered"';
+            codigo += '<tbody>';
+                codigo += '<tr>';
+                    codigo += '<th>Nombre</th>';
+                    codigo += '<th>Bebida</th>';
+                    codigo += '<th>Comentario</th>';
+                    codigo += '<th>Sala</th>';
+                    codigo += '<th>Pedido</th>';
+                codigo += '</tr>';
+            for (var i=0; i<app.model['order']['orders'].length; i++) {
+                for(var key in app.model['order']['orders'][i]){
+                    if (app.model['order']['orders'][i][key]['entregado'] === 1) {
+                        codigo += '<tr id="'+key.replace(' ','-')+'_'+app.model['order']['orders'][i][key]['Bebida'].replace(' ','-')+'" onclick="app.confirmDelivered(this);" style="text-decoration:line-through;background-color:#a3a3a3;">';
+                    }
+                    else{
+                        codigo += '<tr id="'+key.replace(' ','-')+'_'+app.model['order']['orders'][i][key]['Bebida'].replace(' ','-')+'" onclick="app.confirmDelivered(this);">';
+                    }
+                        var id = app.model['order']['orders'][i][key]['meetId'];
+                        codigo += '<td>'+key+'</td>';
+                        codigo += '<td>'+app.model['order']['orders'][i][key]['Bebida']+'</td>';
+                        codigo += '<td>'+app.model['order']['orders'][i][key]['Coment']+'</td>';
+                        codigo += '<td>'+app.model['meetings'][id]['sala']+'</td>'
+                    if (app.model['order']['orders'][i][key]['entregado'] === 1) {
+                        codigo += '<td>Entregado</td>';
+                    }
+                    else{
+                    	var fechaAct = new Date();
+                    	var hact = fechaAct.getHours();
+                    	var mact = fechaAct.getMinutes();
+                    	var h = app.model['order']['orders'][i][key]['hora'].split(':')[0];
+                    	var m = app.model['order']['orders'][i][key]['hora'].split(':')[1];
+                    	var mrest,hrest;
+                    	mrest = mact - m;
+                    	if (mrest < 0) {
+                    		mrest = 60 + mrest;
+                    		h = h + 1;
+                    	}
+                    	hrest = (hact - h)*60;
+                    	mrest = mrest + hrest;
+                        codigo += '<td>Hace '+mrest+' min</td>';
+                    }
+                    codigo += '</tr>';
+                }
+            }
+                codigo += '</tbody>';
+            codigo += '</table>';
+            users.append(codigo);
+        }
+    },
+
 }
 
 $('#datepicker').datepicker({
@@ -499,6 +554,8 @@ $("#timepicker").timepicker({
 $("#timepicker2").timepicker({
   showInputs: false
 });
+
+setTimeout(function(){app.refreshOrders();},59999);
 
 firebase.initializeApp(app.firebaseConfig);
 firebase.database().ref().on('value', function(snap){
