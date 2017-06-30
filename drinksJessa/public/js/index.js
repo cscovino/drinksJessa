@@ -60,7 +60,6 @@ var app = {
 
   	editMeet: function(calEvent,end){
   		document.getElementById('title-meet').value = calEvent.title;
-  		debugger;
   		for(var key in app.model.meetings){
   			if(app.model.meetings[key]['titulo'] === calEvent.title){
   				document.getElementById('room-meet').value = app.model.meetings[key]['sala'];
@@ -505,7 +504,7 @@ var app = {
             for (var i=0; i<app.model['order']['orders'].length; i++) {
                 for(var key in app.model['order']['orders'][i]){
                     if (app.model['order']['orders'][i][key]['entregado'] === 1) {
-                        codigo += '<tr id="'+key.replace(' ','-')+'_'+app.model['order']['orders'][i][key]['Bebida'].replace(' ','-')+'" onclick="app.confirmDelivered(this);" style="text-decoration:line-through;background-color:#a3a3a3;">';
+                        codigo += '<tr id="'+key.replace(' ','-')+'_'+app.model['order']['orders'][i][key]['Bebida'].replace(' ','-')+'" onclick="app.confirmDelivered(this);" style="text-decoration:line-through;color:#ccc;">';
                     }
                     else{
                         codigo += '<tr id="'+key.replace(' ','-')+'_'+app.model['order']['orders'][i][key]['Bebida'].replace(' ','-')+'" onclick="app.confirmDelivered(this);">';
@@ -516,7 +515,19 @@ var app = {
                         codigo += '<td>'+app.model['order']['orders'][i][key]['Coment']+'</td>';
                         codigo += '<td>'+app.model['meetings'][id]['sala']+'</td>'
                     if (app.model['order']['orders'][i][key]['entregado'] === 1) {
-                        codigo += '<td>Entregado</td>';
+                    	var h = app.model['order']['orders'][i][key]['hora'].split(':')[0];
+                    	var m = app.model['order']['orders'][i][key]['hora'].split(':')[1];
+                    	var he = app.model['order']['orders'][i][key]['horae'].split(':')[0];
+                    	var me = app.model['order']['orders'][i][key]['horae'].split(':')[1];
+                    	var mrest,hrest;
+                    	mrest = me - m;
+                    	if (mrest < 0) {
+                    		mrest = 60 + mrest;
+                    		h = +h + 1;
+                    	}
+                    	hrest = (he - h)*60;
+                    	mrest = mrest + hrest;
+                        codigo += '<td>Entregado en '+mrest+' min</td>';
                     }
                     else{
                     	var fechaAct = new Date();
@@ -528,7 +539,7 @@ var app = {
                     	mrest = mact - m;
                     	if (mrest < 0) {
                     		mrest = 60 + mrest;
-                    		h = h + 1;
+                    		h =  +h + 1;
                     	}
                     	hrest = (hact - h)*60;
                     	mrest = mrest + hrest;
@@ -555,7 +566,7 @@ $("#timepicker2").timepicker({
   showInputs: false
 });
 
-setTimeout(function(){app.refreshOrders();},59999);
+setInterval(function(){app.refreshOrders();},59999);
 
 firebase.initializeApp(app.firebaseConfig);
 firebase.database().ref().on('value', function(snap){
